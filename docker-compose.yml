@@ -1,0 +1,18 @@
+version: '3.1'
+services:
+  web:
+    build: .
+    depends_on:
+     - neo
+    volumes:
+     - .:/srv/shtuki
+    ports:
+     - "127.0.0.1:8080:8080"
+  neo:
+    image: "neo4j"
+    ports:
+      - "127.0.0.1:7474:7474"
+      - "127.0.0.1:7687:7687"
+    volumes:
+      - ./docker_files/neo:/data
+      - ./docker/neo/dbms:/data/dbms
