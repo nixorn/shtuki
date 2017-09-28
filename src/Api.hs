@@ -10,13 +10,14 @@ module Api where
 
 import Data.Pool (Pool, withResource)
 import Data.Text (Text)
-import Control.Monad.Reader
-import Control.Monad.Base
-import Control.Monad.Trans.Control
+import Control.Monad.Reader (ReaderT, runReaderT, ask, liftIO)
 import Database.Bolt (Pipe)
-import Servant
-import Log
-import qualified Control.Category
+import qualified Servant
+import Servant (
+  Proxy, Post, Get, Capture, JSON, ReqBody, Handler
+  , (:>), (:<|>)(..), (:~>)(..))
+import Log (currentTime, MonadTime, Logger, MonadLog, LogT, runLogT)
+
 
 import Types
 
@@ -49,10 +50,10 @@ type UserAPI = "users" :> ReqBody '[JSON] User :> Post '[JSON] User
                :<|> "users" :> Capture "id" Integer :> Get '[JSON] User
 
 
-userAPI :: Proxy UserAPI
-userAPI = Proxy
+userAPI :: Servant.Proxy UserAPI
+userAPI = Servant.Proxy
 
-app :: Pool Pipe -> Logger -> Application
-app pool logger = serve userAPI $ enter nt $ createUser :<|> readUser
+app :: Pool Pipe -> Logger -> Servant.Application
+app pool logger = Servant.serve userAPI $ Servant.enter nt $ createUser :<|> readUser
   where
     nt = NT $ \m -> runLogT "api" logger (runReaderT (runH m) pool)

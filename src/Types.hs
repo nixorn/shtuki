@@ -8,11 +8,11 @@
 
 module Types where
 import           Data.Aeson (
-  FromJSON (..), ToJSON (..), withObject, object, (.=), (.:))
+   FromJSON (..), ToJSON (..), withObject, object, (.=), (.:))
 import           Data.Text    (Text)
 import           Data.Map     (Map)
 
-import Database.Bolt (Record, Value (..), RecordValue (..), Node (..), at)
+import Database.Bolt (Value (..), RecordValue (..), Node (..))
 
 
 data Lot = Lot {
