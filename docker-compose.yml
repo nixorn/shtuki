@@ -8,11 +8,17 @@ services:
      - .:/srv/shtuki
     ports:
      - "127.0.0.1:8080:8080"
+    environment:
+      - NEOPASSWORD=${NEOPASSWORD:-neo4j}
+      - NEOHOST=${NEOHOST:-neo}
+      - NEOUSER=${NEOUSER:-neo4j}
   neo:
     image: "neo4j"
     ports:
       - "127.0.0.1:7474:7474"
       - "127.0.0.1:7687:7687"
+    environment:
+      - NEO4J_AUTH=${NEOUSER:-neo4j}/${NEOPASSWORD:-neo4j}
     volumes:
       - ./docker_files/neo:/data
-      - ./docker/neo/dbms:/data/dbms
+      #- ./docker/neo/dbms:/data/dbms

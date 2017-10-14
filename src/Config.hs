@@ -4,6 +4,7 @@
 {-# LANGUAGE OverloadedStrings          #-}
 module Config where
 
+import           Data.Text                            (pack)
 import           Control.Exception                    (throwIO)
 import           Control.Monad.Except                 (ExceptT, MonadError)
 import           Control.Monad.IO.Class
@@ -117,9 +118,15 @@ makePool Production env = do
         let timeout = 500
             resPerStripe = 1
         host <- (MaybeT . lookupEnv) "NEOHOST"
-        user <- read <$> (MaybeT . lookupEnv) "NEOUSER"
-        pass <- read <$> (MaybeT . lookupEnv) "NEOPASSWORD"
-        lift $ createPool (connect $ def {user = user, password = pass, host = host}) close (envPool Production) timeout resPerStripe
+        user <- (MaybeT . lookupEnv) "NEOUSER"
+        pass <- (MaybeT . lookupEnv) "NEOPASSWORD"
+        lift $ createPool (connect $ def {user = pack user,
+                                          password = pack pass,
+                                          host = host})
+                          close
+                          (envPool Production)
+                          timeout
+                          resPerStripe
     case pool of
          Nothing -> throwIO (userError "Database Configuration not present in environment.")
          Just a -> return a
