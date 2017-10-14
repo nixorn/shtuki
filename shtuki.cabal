@@ -15,22 +15,36 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Server
-                     , Types
-                     , Db
+  exposed-modules:     Config
+                     , Models
                      , Api
-  build-depends:       base >= 4.7 && < 5
-                     , servant-server
+                     , Api.User
+                     , Logger
+
+  build-depends:       base >= 4.9 && < 5.0
                      , aeson
-                     , warp
-                     , base-compat
+                     , bytestring
+                     , monad-control
+                     , monad-logger
                      , mtl
-                     , hasbolt
-                     , text
-                     , containers
+                     , servant >= 0.11 && < 0.12
+                     , servant-js >= 0.9 && < 0.10
+                     , servant-server >= 0.11 && < 0.12
                      , transformers
+                     , wai
+                     , wai-extra
+                     , warp
+                     , text
+                     , monad-metrics
+                     , ekg
+                     , wai-middleware-metrics
+                     , microlens
+                     , containers
+                     , ekg-core
+                     , katip >= 0.5.0.2 && < 0.6
+                     , fast-logger
+                     , hasbolt
                      , resource-pool
-                     , log-base
                      , data-default
   default-language:    Haskell2010
 
@@ -40,6 +54,13 @@ executable shtuki-exe
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , shtuki
+                     , safe
+                     , ekg
+                     , ekg-core
+                     , wai-middleware-metrics
+                     , warp
+                     , microlens
+                     , monad-metrics
 
   default-language:    Haskell2010
 
