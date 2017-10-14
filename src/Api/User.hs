@@ -44,6 +44,7 @@ allUsers = do
     logDebugNS "web" "allUsers"
     let cypher = "MATCH (u:User) RETURN u;"
     records <- runQry cypher
+    logDebugNS "web" (pack . show $ records)
     traverse toUser records
 
 usersByName :: MonadIO m => Text -> AppT m [User]
@@ -60,7 +61,7 @@ createUser :: MonadIO m => User -> AppT m [User]
 createUser user = do
     increment "createUser"
     logDebugNS "web" "creating a user"
-    let cypher = "CREATE (User {name:{name}, email:{email}})"
+    let cypher = "CREATE (User:User {name:{name}, email:{email}})"
         params = fromList [("email", T $ email user), ("name", T $ name user)]
     records <- runQryParams cypher params
     traverse toUser records
